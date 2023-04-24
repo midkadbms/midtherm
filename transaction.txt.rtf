@@ -1,0 +1,45 @@
+{\rtf1\ansi\ansicpg1251\cocoartf2580
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset0 HelveticaNeue;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab560
+\pard\pardeftab560\slleading20\partightenfactor0
+
+\f0\fs26 \cf0 \
+DECLARE\
+  v_EMPLOYEE_ID NUMBER := 1;\
+  v_CASHIER_ID NUMBER := 1;\
+  v_TABLE_ID NUMBER := 1; \
+  \
+BEGIN\
+  SAVEPOINT start_tran;\
+  \
+  BEGIN\
+    INSERT INTO EMPLOYEE (EMPLOYEE_ID, EMPLOYEE_NAME, EMPLOYEE_POS, EMPLOYEE_SALARY)\
+    VALUES (v_EMPLOYEE_ID, 'John Doe', 'Manager', 5000);\
+    \
+    INSERT INTO CASHIER (CASHIER_ID, CASHIER_NAME, CASHIER_AGE, EMPLOYEE_ID)\
+    VALUES (v_CASHIER_ID, 'Jane Smith', 25, v_EMPLOYEE_ID);\
+    \
+    INSERT INTO TABLE_1 (TABLE_ID,TABLE_NUMBER,TABLE_CAPACITY) name\
+    VALUES (v_TABLE_ID, '3', 30);\
+    \
+    COMMIT;\
+    DBMS_OUTPUT.PUT_LINE('Transaction complete.');\
+    \
+  EXCEPTION\
+    WHEN OTHERS THEN\
+      DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);\
+      ROLLBACK TO start_tran;\
+      DBMS_OUTPUT.PUT_LINE('Transaction rolled back.');\
+  END;\
+  \
+END;\
+\
+\
+\pard\pardeftab560\slleading20\pardirnatural\partightenfactor0
+\cf0 \
+\
+\pard\pardeftab560\slleading20\partightenfactor0
+\cf0 This nested block contains three INSERT statements, which insert data into three different tables: EMPLOYEE, CASHIER, and TABLE_1.If all of the INSERT statements complete successfully, the COMMIT statement is executed, which makes the changes permanent in the database. The DBMS_OUTPUT.PUT_LINE procedure is used to display a message that indicates that the transaction has been completed.If any error occurs during the execution of the INSERT statements, the EXCEPTION block is executed.  The ROLLBACK statement is used to undo any changes made to the database during the transaction. }
