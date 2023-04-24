@@ -1,0 +1,69 @@
+1)
+CREATE OR REPLACE PROCEDURE update_employee_salary(
+    n_employee_id IN employee.employee_id%TYPE,
+    i_perc IN NUMBER
+)
+IS
+no_found exception;
+BEGIN
+    UPDATE employee
+    SET employee_salary = employee_salary * (1 + i_perc/100)
+    WHERE employee_id = n_employee_id;
+     
+    IF SQL%ROWCOUNT = 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'No employee found with ID ' || n_employee_id);
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('Salary updated for employee ' || n_employee_id || '.');
+    END IF;
+EXCEPTION
+   WHEN no_found THEN 
+      dbms_output.put_line('No such employee!');
+   WHEN OTHERS THEN 
+      DBMS_OUTPUT.PUT_LINE('Error: '|| SQLERRM);
+END;
+
+ 
+SO MY PROCEDURE IS CALLED update_employee_salary .THIS PROCEDURE HELP US for update the employee_salary column of the employee table for the specified employee_id by multiplying the current salary with (1 + p_percent/100).SQL%ROWCOUNT  WILL CHECK HOW MANY ROWS ARE AFFECTED, IF 0 ROWS WILL BE AFFECTED THEN IT PRINTS A MESSAGE.If an error occurs during the execution of the procedure, the EXCEPTION block catches it and prints the error message using the SQLERRM function.
+2)TO SHOW THE RESULT WE USE CODE BELOW
+BEGIN
+  update_employee_salary(5, 10);
+END;
+
+2. 
+CREATE OR REPLACE PROCEDURE find_sname
+(o_employee_id IN NUMBER,
+o_employee_name OUT VARCHAR2,
+o_employee_pos OUT varchar2
+)
+AS
+BEGIN
+SELECT employee_name, employee_pos
+INTO o_employee_name, o_employee_pos
+FROM employee
+WHERE employee_id = o_employee_id;
+EXCEPTION
+WHEN OTHERS
+THEN
+DBMS_OUTPUT.PUT_LINE('Error in finding employee_id: '||o_employee_id);
+END find_sname;
+ 
+
+
+The procedure takes in a employee_id using the parameter named
+o_employee_id. It passes out the parameters o_employee_name and o_employee_pos.
+The procedure is a simple select statement that retrieves the employee_name and employee_pos
+from the employee table, where the employee_id matches the value of o_employee_id
+o_employee_id is the only in parameter that exists in the procedure. To call the procedure, a
+value must be passed in for the o_employee_id parameter.
+If there is no match for the specified employee_id in the employee table, an exception is raised and an error message is printed to the console using the DBMS_OUTPUT.PUT_LINE statement.
+
+
+DECLARE
+  v_local_employee_name employee.employee_name%TYPE;
+  v_local_employee_pos employee.employee_pos%TYPE;
+BEGIN
+  find_employee(1, v_local_employee_name, v_local_employee_pos);
+  DBMS_OUTPUT.PUT_LINE('Employee is: ' || v_local_employee_name || ' ' || v_local_employee_pos || '.');
+END;
+/
+ 
